@@ -17,6 +17,7 @@ export function App() {
           <CourseCard key={course.id} course={course} progress={(i + 1) * 2} />
         ))}
       </section>
+      <ShowcaseSection />
       <Footer />
     </main>
   )
