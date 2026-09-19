@@ -1,6 +1,7 @@
 import { CourseCard } from "@/components/common/course-card"
 import { MOCK_COURSES } from "@/lib/mock-data"
 import { HeroSection } from "@/sections/herosection"
+import { ShowcaseSection } from "@/sections/showcasesection"
 import { Footer } from "@/sections/footer"
 
 export function App() {
