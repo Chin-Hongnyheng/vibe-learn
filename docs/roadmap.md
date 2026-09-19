@@ -25,6 +25,7 @@ This roadmap defines the strict order of implementation for the Vibelearn projec
 - [ ] 2.3: Integrate Clerk React SDK into the `frontend` for Sign Up / Log In UI.
 - [ ] 2.4: Protect specific frontend routes (e.g., `/my-learning`) using Clerk components.
 - [ ] 2.5: Build the Public Catalog Page (using mock course data).
+  - [x] Implement the reference hero with responsive layout, learning illustration, and Explore Courses anchor.
 - [ ] 2.6: Build the Course Detail Page (using mock module/lesson data).
 - [ ] 2.7: Build the Lesson Page UI (YouTube embed, curriculum sidebar, text notes).
 - [ ] 2.8: Build the "My Learning" Dashboard (using mock progress data).
