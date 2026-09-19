@@ -45,93 +45,8 @@ function getOutcomeIcon(iconName: string) {
 }
 
 function CourseHeroCover({ course }: { course: Course }) {
-  const isNextJs =
-    course.title.toLowerCase().includes("next.js") || course.tag.toLowerCase().includes("next")
-
-  if (isNextJs) {
-    return (
-      <div className="relative aspect-square w-full max-w-[340px] shrink-0 overflow-hidden rounded-3xl border border-emerald-950/60 bg-[#07130e] p-6 shadow-xl flex flex-col items-center justify-center">
-        {/* Radial glow */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.28)_0%,transparent_70%)]" />
-
-        {/* Decorative faint code background */}
-        <div className="pointer-events-none absolute inset-0 select-none overflow-hidden p-4 font-mono text-[9px] leading-tight text-emerald-500/15 opacity-60">
-          <div className="flex justify-between">
-            <div>
-              <p>import &#123; Suspense &#125; from 'react'</p>
-              <p>const cache = new Map()</p>
-              <p>export async function fetchCourse()</p>
-              <p>const router = useRouter()</p>
-              <p>const [state, dispatch] = useReducer()</p>
-            </div>
-            <div className="text-right">
-              <p>// Server Actions</p>
-              <p>export async function mutate()</p>
-              <p>revalidatePath('/courses')</p>
-              <p>cookies().get('session')</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Next.js N Logo Box */}
-        <div className="relative z-10 flex size-36 items-center justify-center rounded-2xl border border-white/20 bg-black/85 shadow-2xl backdrop-blur-sm">
-          <svg viewBox="0 0 180 180" className="size-24 text-white" fill="none">
-            <mask
-              id="next-mask"
-              maskUnits="userSpaceOnUse"
-              x="0"
-              y="0"
-              width="180"
-              height="180"
-              style={{ maskType: "alpha" }}
-            >
-              <circle cx="90" cy="90" r="90" fill="black" />
-            </mask>
-            <g mask="url(#next-mask)">
-              <circle cx="90" cy="90" r="90" fill="black" stroke="white" strokeWidth="6" />
-              <path
-                d="M149.508 157.438L69.142 54H54V125.97H66.1136V69.3836L139.999 164.845C143.333 162.614 146.509 160.138 149.508 157.438Z"
-                fill="url(#paint0_linear)"
-              />
-              <rect x="115" y="54" width="12" height="72" fill="url(#paint1_linear)" />
-            </g>
-            <defs>
-              <linearGradient
-                id="paint0_linear"
-                x1="109"
-                y1="116.5"
-                x2="144.5"
-                y2="160.5"
-                gradientUnits="userSpaceOnUse"
-              >
-                <stop stopColor="white" />
-                <stop offset="1" stopColor="white" stopOpacity="0" />
-              </linearGradient>
-              <linearGradient
-                id="paint1_linear"
-                x1="121"
-                y1="54"
-                x2="120.799"
-                y2="106.875"
-                gradientUnits="userSpaceOnUse"
-              >
-                <stop stopColor="white" />
-                <stop offset="1" stopColor="white" stopOpacity="0" />
-              </linearGradient>
-            </defs>
-          </svg>
-        </div>
-
-        {/* NEXT.JS Label */}
-        <span className="relative z-10 mt-6 font-sans text-xl font-bold tracking-[0.25em] text-white">
-          NEXT<span className="text-emerald-400">.JS</span>
-        </span>
-      </div>
-    )
-  }
-
   return (
-    <div className="relative aspect-square w-full max-w-[340px] shrink-0 overflow-hidden rounded-3xl border border-neutral-200 bg-neutral-900 shadow-xl dark:border-neutral-800">
+    <div className="relative aspect-square w-full max-w-[280px] sm:max-w-[340px] shrink-0 overflow-hidden rounded-3xl border border-neutral-200 bg-neutral-900 shadow-xl dark:border-neutral-800">
       <img src={course.imgUrl} alt={course.title} className="size-full object-cover" />
     </div>
   )
@@ -484,25 +399,25 @@ export function CourseDetailPage() {
       </div>
 
       {/* Floating / Sticky Progress Bar */}
-      <div className="sticky bottom-6 z-30 mt-16 px-4 sm:px-6">
-        <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 rounded-2xl border border-neutral-200/80 bg-white/95 p-4 shadow-xl backdrop-blur-md sm:gap-6 sm:px-6 dark:border-neutral-800 dark:bg-neutral-900/95">
+      <div className="sticky bottom-4 sm:bottom-6 z-30 mt-12 sm:mt-16 px-3 sm:px-6">
+        <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 sm:gap-6 rounded-2xl border border-neutral-200/80 bg-white/95 p-3 sm:p-4 shadow-xl backdrop-blur-md dark:border-neutral-800 dark:bg-neutral-900/95">
           {/* Left: Icon & Progress Text */}
-          <div className="flex items-center gap-3.5 shrink-0">
-            <div className="flex size-10 items-center justify-center rounded-full bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400">
-              <ChartNoAxesColumnIncreasing className="size-5" />
+          <div className="flex items-center gap-2.5 sm:gap-3.5 shrink-0">
+            <div className="flex size-9 sm:size-10 items-center justify-center rounded-full bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400">
+              <ChartNoAxesColumnIncreasing className="size-4 sm:size-5" />
             </div>
             <div>
-              <span className="block text-xs font-medium text-neutral-500 dark:text-neutral-400">
+              <span className="block text-[11px] sm:text-xs font-medium text-neutral-500 dark:text-neutral-400">
                 Your Progress
               </span>
-              <span className="block font-sans text-sm sm:text-base font-bold text-neutral-900 dark:text-white">
+              <span className="block font-sans text-xs sm:text-base font-bold text-neutral-900 dark:text-white">
                 35% complete
               </span>
             </div>
           </div>
 
           {/* Center: Progress Bar */}
-          <div className="hidden sm:block flex-1 max-w-md">
+          <div className="hidden md:block flex-1 max-w-md">
             <div className="h-2.5 w-full overflow-hidden rounded-full bg-neutral-100 dark:bg-neutral-800">
               <div className="h-full rounded-full bg-emerald-500 transition-all duration-500 w-[35%]" />
             </div>
@@ -511,10 +426,10 @@ export function CourseDetailPage() {
           {/* Right: Continue Learning Button */}
           <Link
             to={`/courses/${course.id}/learn`}
-            className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-emerald-500 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-600 active:bg-emerald-700"
+            className="inline-flex shrink-0 items-center gap-1.5 sm:gap-2 rounded-xl bg-emerald-500 px-4 sm:px-6 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-600 active:bg-emerald-700"
           >
             Continue Learning
-            <ArrowRight className="size-4" />
+            <ArrowRight className="size-3.5 sm:size-4" />
           </Link>
         </div>
       </div>
