@@ -2,6 +2,7 @@ import { useState } from "react"
 import { Link, useLocation } from "react-router-dom"
 import { Bell, Menu, X } from "lucide-react"
 import { cn } from "@/lib/utils"
+import logoImg from "@/assets/logo.png"
 
 export function NavigationSection() {
   const location = useLocation()
@@ -17,26 +18,13 @@ export function NavigationSection() {
         {/* Left: Brand Logo */}
         <Link
           to="/"
-          className="group flex items-center gap-2.5 transition-opacity hover:opacity-90"
+          className="group flex items-center gap-3 transition-opacity hover:opacity-90"
         >
-          <div className="flex h-10 w-10 items-center justify-center">
-            <svg
-              viewBox="0 0 36 36"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-9 w-9 transition-transform group-hover:scale-105"
-            >
-              {/* Vibe Learn stylized dual-leaf mark */}
-              <path
-                d="M10.8 7.2C10.8 7.2 5.4 12.6 5.4 20.4C5.4 24.8 8.8 28.2 13.2 28.2C18.2 28.2 23.4 20.4 23.4 11.4C23.4 7.2 19.8 3.6 15.6 3.6C13.2 3.6 10.8 7.2 10.8 7.2Z"
-                fill="#10B981"
-              />
-              <path
-                d="M21 13.2C21 13.2 17.4 17.4 17.4 23.1C17.4 26.4 19.8 29.1 23.1 29.1C27 29.1 30.6 23.4 30.6 16.8C30.6 13.5 28.2 11.1 24.9 11.1C23.1 11.1 21 13.2 21 13.2Z"
-                fill="#34D399"
-              />
-            </svg>
-          </div>
+          <img
+            src={logoImg}
+            alt="Vibe Learn Logo"
+            className="h-9 w-auto object-contain transition-transform group-hover:scale-105"
+          />
           <span className="font-sans text-2xl font-bold tracking-tight text-neutral-900">
             Vibe <span className="text-primary-500">Learn</span>
           </span>
