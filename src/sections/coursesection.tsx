@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom"
 import { CourseCard } from "@/components/common/course-card"
 import { MOCK_COURSES } from "@/lib/mock-data"
 import { cn } from "@/lib/utils"
@@ -9,19 +10,22 @@ type CourseSectionProps = {
 }
 
 export function CourseSection({ courses = MOCK_COURSES.slice(0, 3), onCourseClick }: CourseSectionProps) {
+  const navigate = useNavigate()
+  const handleCourseClick = onCourseClick || ((course: Course) => navigate(`/courses/${course.id}`))
+
   return (
-    <section id="courses" className="bg-emerald-50/30 px-4 py-20 sm:px-6">
+    <section id="courses" className="bg-emerald-50/30 px-4 py-20 sm:px-6 dark:bg-emerald-950/10">
       <div className="mx-auto max-w-6xl">
         <div className="flex items-start justify-between gap-8">
           <div className="max-w-xl">
-            <p className="flex items-center gap-3 text-sm font-semibold tracking-[0.2em] text-emerald-600 uppercase">
+            <p className="flex items-center gap-3 text-sm font-semibold tracking-[0.2em] text-emerald-600 uppercase dark:text-emerald-400">
               <span className="h-0.5 w-8 rounded-full bg-emerald-500" />
               Our Courses
             </p>
-            <h2 className="mt-3 text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
+            <h2 className="mt-3 text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl dark:text-white">
               Popular Learning Paths
             </h2>
-            <p className="mt-4 text-lg leading-relaxed text-slate-500">
+            <p className="mt-4 text-lg leading-relaxed text-slate-500 dark:text-slate-400">
               Choose from our curated courses and start your journey towards new skills and better
               opportunities.
             </p>
@@ -36,7 +40,7 @@ export function CourseSection({ courses = MOCK_COURSES.slice(0, 3), onCourseClic
               key={course.id}
               course={course}
               progress={25}
-              onClick={onCourseClick ? () => onCourseClick(course) : undefined}
+              onClick={() => handleCourseClick(course)}
             />
           ))}
         </div>

@@ -1,25 +1,62 @@
-import { CourseCard } from "@/components/common/course-card"
-import { MOCK_COURSES } from "@/lib/mock-data"
-import { HeroSection } from "@/sections/herosection"
-import { ShowcaseSection } from "@/sections/showcasesection"
-import { Footer } from "@/sections/footer"
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
+import { RootLayout } from "@/components/layout/root-layout"
+import { HomePage } from "@/pages/home-page"
+import { CoursesPage } from "@/pages/courses-page"
+import { CourseDetailPage } from "@/pages/course-detail-page"
+import { LearningPage } from "@/pages/learning-page"
+import { SignInPage } from "@/pages/sign-in-page"
+import { SignUpPage } from "@/pages/sign-up-page"
+import { ProtectedRoute } from "@/components/auth/protected-route"
+import { NotFoundPage } from "@/pages/not-found-page"
 
 export function App() {
   return (
-    <main className="min-h-svh bg-background">
-      <HeroSection />
-      <section
-        id="courses"
-        aria-label="Courses"
-        className="mx-auto grid max-w-6xl scroll-mt-6 gap-6 px-6 py-12 sm:grid-cols-2 lg:grid-cols-3"
-      >
-        {MOCK_COURSES.map((course, i) => (
-          <CourseCard key={course.id} course={course} progress={(i + 1) * 2} />
-        ))}
-      </section>
-      <ShowcaseSection />
-      <Footer />
-    </main>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<RootLayout />}>
+          <Route index element={<HomePage />} />
+          <Route path="courses" element={<CoursesPage />} />
+          <Route path="course" element={<Navigate to="/courses" replace />} />
+          <Route path="courses/:id" element={<CourseDetailPage />} />
+          <Route path="course/:id" element={<CourseDetailPage />} />
+          <Route
+            path="courses/:id/learn"
+            element={
+              <ProtectedRoute>
+                <LearningPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="course/:id/learn"
+            element={
+              <ProtectedRoute>
+                <LearningPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="my-learning"
+            element={
+              <ProtectedRoute>
+                <LearningPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="my-learning/:id"
+            element={
+              <ProtectedRoute>
+                <LearningPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="sign-in/*" element={<SignInPage />} />
+          <Route path="sign-up/*" element={<SignUpPage />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   )
 }
 
