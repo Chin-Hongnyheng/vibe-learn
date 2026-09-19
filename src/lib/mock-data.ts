@@ -1,4 +1,14 @@
 import type { Course } from "@/types/courses";
+import nextjsImg from "@/assets/courses/nextjs.jpg";
+import reactImg from "@/assets/courses/react.jpg";
+import typescriptImg from "@/assets/courses/typescript.jpg";
+import aiLlmsImg from "@/assets/courses/ai-llms.jpg";
+import ragImg from "@/assets/courses/rag.jpg";
+import pythonImg from "@/assets/courses/python.jpg";
+import systemDesignImg from "@/assets/courses/system-design.jpg";
+import postgresqlImg from "@/assets/courses/postgresql.jpg";
+import devopsImg from "@/assets/courses/devops.jpg";
+import webSecurityImg from "@/assets/courses/web-security.jpg";
 
 export const MOCK_COURSES: Course[] = [
   {
@@ -8,7 +18,7 @@ export const MOCK_COURSES: Course[] = [
     "description": "Learn the App Router the way it actually works: routing and layouts, the server/client boundary, caching, and server actions.",
     "category": "Web Development",
     "tag": "POPULAR",
-    "imgUrl": "https://picsum.photos/seed/vertex-nextjs-app-router-in-depth/1600/900",
+    "imgUrl": nextjsImg,
     "level": "Intermediate",
     "duration": 119,
     "durationFormatted": "1h 59m",
@@ -1534,7 +1544,7 @@ export const MOCK_COURSES: Course[] = [
     "description": "Measure before you optimise. Profiling, render behaviour, concurrent features, and shipping less JavaScript.",
     "category": "Web Development",
     "tag": "Web Development",
-    "imgUrl": "https://picsum.photos/seed/vertex-react-performance-engineering/1600/900",
+    "imgUrl": reactImg,
     "level": "Advanced",
     "duration": 141,
     "durationFormatted": "2h 21m",
@@ -3054,7 +3064,7 @@ export const MOCK_COURSES: Course[] = [
     "description": "Go past annotations. Structural typing, narrowing, generics, and the type-level tools that make invalid states impossible.",
     "category": "Languages",
     "tag": "POPULAR",
-    "imgUrl": "https://picsum.photos/seed/vertex-typescript-for-application-developers/1600/900",
+    "imgUrl": typescriptImg,
     "level": "Intermediate",
     "duration": 115,
     "durationFormatted": "1h 54m",
@@ -4580,7 +4590,7 @@ export const MOCK_COURSES: Course[] = [
     "description": "From first API call to a feature you can ship: prompting, structured output, tool calling, streaming, and cost control.",
     "category": "AI Engineering",
     "tag": "POPULAR",
-    "imgUrl": "https://picsum.photos/seed/vertex-building-ai-apps-with-llms/1600/900",
+    "imgUrl": aiLlmsImg,
     "level": "Intermediate",
     "duration": 147,
     "durationFormatted": "2h 27m",
@@ -6100,7 +6110,7 @@ export const MOCK_COURSES: Course[] = [
     "description": "Build a RAG system that actually retrieves the right thing: embeddings, chunking, hybrid search, reranking, and grounded answers.",
     "category": "AI Engineering",
     "tag": "AI Engineering",
-    "imgUrl": "https://picsum.photos/seed/vertex-retrieval-augmented-generation-from-scratch/1600/900",
+    "imgUrl": ragImg,
     "level": "Advanced",
     "duration": 117,
     "durationFormatted": "1h 57m",
@@ -7620,7 +7630,7 @@ export const MOCK_COURSES: Course[] = [
     "description": "A practical on-ramp to data work in Python: the language basics you need, pandas, plotting, and reproducible workflows.",
     "category": "Data",
     "tag": "POPULAR",
-    "imgUrl": "https://picsum.photos/seed/vertex-python-for-data-work/1600/900",
+    "imgUrl": pythonImg,
     "level": "Beginner",
     "duration": 215,
     "durationFormatted": "3h 35m",
@@ -9140,7 +9150,7 @@ export const MOCK_COURSES: Course[] = [
     "description": "The building blocks of scalable systems — load balancing, caching, queues, partitioning, and the reliability work around them.",
     "category": "Backend & Infrastructure",
     "tag": "Backend & Infrastructure",
-    "imgUrl": "https://picsum.photos/seed/vertex-system-design-foundations/1600/900",
+    "imgUrl": systemDesignImg,
     "level": "Intermediate",
     "duration": 97,
     "durationFormatted": "1h 37m",
@@ -10660,7 +10670,7 @@ export const MOCK_COURSES: Course[] = [
     "description": "SQL you will actually write, schemas that hold up, indexes that get used, and the operational basics behind them.",
     "category": "Data",
     "tag": "Data",
-    "imgUrl": "https://picsum.photos/seed/vertex-postgresql-for-developers/1600/900",
+    "imgUrl": postgresqlImg,
     "level": "Intermediate",
     "duration": 133,
     "durationFormatted": "2h 13m",
@@ -12180,7 +12190,7 @@ export const MOCK_COURSES: Course[] = [
     "description": "Containerise an application, run it on Kubernetes, ship it through a pipeline, and operate it once it is live.",
     "category": "Backend & Infrastructure",
     "tag": "Backend & Infrastructure",
-    "imgUrl": "https://picsum.photos/seed/vertex-devops-with-docker-and-kubernetes/1600/900",
+    "imgUrl": devopsImg,
     "level": "Advanced",
     "duration": 160,
     "durationFormatted": "2h 39m",
@@ -13700,7 +13710,7 @@ export const MOCK_COURSES: Course[] = [
     "description": "The vulnerabilities that actually show up in web applications, how they are exploited, and how to close them for good.",
     "category": "Security",
     "tag": "Security",
-    "imgUrl": "https://picsum.photos/seed/vertex-practical-web-security/1600/900",
+    "imgUrl": webSecurityImg,
     "level": "Intermediate",
     "duration": 120,
     "durationFormatted": "1h 59m",
