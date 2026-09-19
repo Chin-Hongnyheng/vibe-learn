@@ -21,7 +21,7 @@ This roadmap defines the strict order of implementation for the Vibelearn projec
 **Goal:** Build the complete UI using mock data before touching the backend.
 
 - [ ] 2.1: Draft and finalize `docs/system_design/DESIGN.md` to establish UI consistency guidelines.
-- [ ] 2.2: Implement the global design system (typography, colors) in Tailwind.
+- [x] 2.2: Implement the global design system (typography, colors) in Tailwind.
 - [ ] 2.3: Integrate Clerk React SDK into the `frontend` for Sign Up / Log In UI.
 - [ ] 2.4: Protect specific frontend routes (e.g., `/my-learning`) using Clerk components.
 - [ ] 2.5: Build the Public Catalog Page (using mock course data).

@@ -19,7 +19,7 @@ You will build authentication and user accounts with Clerk, the catalog, the cou
 Follow this loop for every request:
 
 1. Read this file, then read `docs/roadmap.md` to understand the current phase and tasks. Do not deviate from the roadmap.
-2. Read the strict architecture rules in `docs/system_design/frontend.md` and `docs/system_design/backend.md`.
+2. Read the strict architecture rules in `docs/system_design/frontend.md` and `docs/system_design/backend.md`, and the design system in `DESIGN.md` and `src/globals.css`.
 3. Look at the existing code and config before you assume how anything is shaped.
 4. Write an implementation prompt in the corresponding phase directory inside `prompts/` (e.g., `prompts/phase-1-foundation/1.1-initialize.md`) covering the goal, the skills you read, the code you inspected, your decisions and assumptions, the files you expect to touch, the requirements, the security considerations, the acceptance criteria, the checks to run, and the exact manual test steps.
 5. Ask the user in the question panel, with Yes and No as selectable options so they choose instead of typing: `I prepared the implementation prompt at prompts/<phase-folder>/<task-number>.md. Is this good to execute?`
@@ -39,7 +39,16 @@ Do not write code before the prompt is approved, unless the user tells you to sk
 
 # 3. UI work
 
-You do not design UI. The UI is already provided to you as desktop images and prompts, so you do NOT need to guess—you just need to follow it exactly. Reproduce the provided designs perfectly: layout, spacing, typography, color, and states. There is no mobile reference, so make each page responsive down to mobile, adapting the layout sensibly (stack columns, collapse the lesson sidebar) while keeping the desktop exact. Do not restyle or improve beyond the reference. Reuse the components and Tailwind patterns already in the project before you add new ones. When there is a reference image, it is the source of truth, and this file says nothing about visuals on purpose.
+You do not design UI. The UI is already provided to you as desktop images and prompts, so you do NOT need to guess—you just need to follow it exactly. Reproduce the provided designs perfectly: layout, spacing, typography, color, and states. There is no mobile reference, so make each page responsive down to mobile, adapting the layout sensibly (stack columns, collapse the lesson sidebar) while keeping the desktop exact. Do not restyle or improve beyond the reference.
+
+**Strict Theme & Token Rules:**
+- Follow the theme design system defined in `DESIGN.md` and configured in `src/globals.css`.
+- Always use the semantic theme tokens (`bg-primary`, `text-primary-foreground`, `bg-background`, `text-foreground`, `border-border`, `bg-card`, etc.) or the registered design system palette tokens (`bg-primary-500`, `text-neutral-900`, `bg-neutral-50`, etc.).
+- Never use arbitrary one-off hex/rgb colors (e.g., `bg-[#123456]`) or arbitrary spacings/sizes (e.g., `w-[321px]`).
+- Strictly adhere to the typography scale: `font-serif` or `font-display` (Playfair Display) for display headlines, and `font-sans` (Inter) for headings, body, buttons, and badges.
+- Use standard radius tokens (`rounded-md` for buttons and inputs, `rounded-lg` for cards, `rounded-full` for badges/pills/progress tracks) and standard shadow tokens (`shadow-sm`, `shadow-md`, `shadow-lg`, `shadow-xl`).
+- Ensure all components support both light and dark modes cleanly through semantic CSS variables.
+- Reuse existing components (such as shadcn UI components in `src/components/ui/`) and patterns before adding new ones. When there is a reference image, it is the source of truth.
 
 Always write your task implementation prompt to the `prompts/` folder before executing any UI or feature code changes.
 
@@ -123,7 +132,12 @@ Keep it small. Use the relevant skill. Preserve the server and client boundaries
 
 - **Technology Lock:** You must strictly follow the technology choices already established in the workspace. Do NOT install any extra packages, libraries, or introduce any new technologies unless explicitly instructed by the user.
 - **Frontend vs Backend Rules:** When working on the frontend, strictly follow all rules defined in `docs/system_design/frontend.md`. When working on the backend, strictly follow all rules defined in `docs/system_design/backend.md`. Any divergence from these rules is unacceptable.
-- **Design Rules:** You must strictly follow the design guidelines and specifications outlined in `docs/system_design/DESIGN.md`.
+- **Design & Theme Rules:**
+  - You must strictly follow the design guidelines and specifications outlined in `DESIGN.md` and the theme tokens defined in `src/globals.css`.
+  - **Colors:** Use semantic shadcn variables (`bg-primary`, `text-primary-foreground`, `bg-background`, `text-foreground`, `border-border`, `bg-card`, etc.) or the registered palette tokens (`bg-primary-500`, `text-neutral-700`, `bg-neutral-50`, etc.). Hardcoded ad-hoc hex, rgb, or arbitrary color classes are strictly forbidden.
+  - **Typography:** Strictly use `font-serif` / `font-display` (Playfair Display) for display headlines and `font-sans` (Inter) for UI, headings, body text, buttons, and badges according to the type scale in `DESIGN.md`.
+  - **Radii & Shadows:** Use the designated radius tokens (`rounded-md` for buttons/inputs, `rounded-lg` for cards, `rounded-full` for badges/pills/progress tracks) and elevation shadows (`shadow-sm`, `shadow-md`, `shadow-lg`, `shadow-xl`).
+  - **Dark Mode:** Ensure all components respect dark mode by relying on the semantic theme tokens from `src/globals.css`.
 
 ---
 
