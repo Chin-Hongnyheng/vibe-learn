@@ -1,15 +1,26 @@
-import { CourseCard } from "@/components/common/course-card"
-import { MOCK_COURSES } from "@/lib/mock-data"
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
+import { RootLayout } from "@/components/layout/root-layout"
+import { HomePage } from "@/pages/home-page"
+import { CoursesPage } from "@/pages/courses-page"
+import { CourseDetailPage } from "@/pages/course-detail-page"
+import { MyLearningPage } from "@/pages/my-learning-page"
+import { NotFoundPage } from "@/pages/not-found-page"
 
 export function App() {
   return (
-    <main className="min-h-svh bg-background p-6">
-      <section className="mx-auto grid max-w-6xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {MOCK_COURSES.map((course, i) => (
-          <CourseCard key={course.id} course={course} progress={(i + 1) * 2} />
-        ))}
-      </section>
-    </main>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<RootLayout />}>
+          <Route index element={<HomePage />} />
+          <Route path="courses" element={<CoursesPage />} />
+          <Route path="course" element={<Navigate to="/courses" replace />} />
+          <Route path="courses/:id" element={<CourseDetailPage />} />
+          <Route path="course/:id" element={<CourseDetailPage />} />
+          <Route path="my-learning" element={<MyLearningPage />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   )
 }
 
