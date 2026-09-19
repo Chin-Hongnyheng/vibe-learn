@@ -1,22 +1,15 @@
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { CourseCard } from "@/components/common/course-card"
+import { MOCK_COURSES } from "@/lib/mock-data"
 
 export function App() {
   return (
-    // <div className="flex min-h-svh p-6">
-    //   <div className="flex max-w-md min-w-0 flex-col gap-4 text-sm leading-loose">
-    //     <div>
-    //       <h1 className="font-medium">Project ready!</h1>
-    //       <p>You may now add components and start building.</p>
-    //       <p>We&apos;ve already added the button component for you.</p>
-    //       <Button className="mt-2">Button</Button>
-    //     </div>
-    //     <div className="font-mono text-xs text-muted-foreground">
-    //       (Press <kbd>d</kbd> to toggle dark mode)
-    //     </div>
-    //   </div>
-    // </div>
-    <Input />
+    <main className="min-h-svh bg-background p-6">
+      <section className="mx-auto grid max-w-6xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {MOCK_COURSES.map((course, i) => (
+          <CourseCard key={course.id} course={course} progress={(i + 1) * 2} />
+        ))}
+      </section>
+    </main>
   )
 }
 
