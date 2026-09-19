@@ -20,7 +20,7 @@ import {
 } from "lucide-react"
 import { MOCK_COURSES } from "@/lib/mock-data"
 import { cn } from "@/lib/utils"
-import type { Course, LearningOutcome } from "@/types/courses"
+import type { Course, CourseModule, LearningOutcome } from "@/types/courses"
 
 function formatDuration(minutes: number) {
   const h = Math.floor(minutes / 60)
@@ -141,32 +141,22 @@ export function CourseDetailPage() {
   const { id } = useParams<{ id: string }>()
   const [showAllModules, setShowAllModules] = useState(false)
   const [isBookmarked, setIsBookmarked] = useState(false)
+  const [expandedModules, setExpandedModules] = useState<Record<string | number, boolean>>({
+    0: true,
+  })
 
   const courseId = Number(id)
-  const course = MOCK_COURSES.find((c) => c.id === courseId) || MOCK_COURSES[0]
+  const course: Course =
+    MOCK_COURSES.find((c) => c.id === courseId || c.slug === id) || MOCK_COURSES[0]
 
-  const outcomes: LearningOutcome[] = course.learningOutcomes || [
-    {
-      icon: "layers",
-      title: "App Router Foundations",
-      description: "Master the App Router, layouts, loading states, and nested routing.",
-    },
-    {
-      icon: "database",
-      title: "Data Fetching & Caching",
-      description: "Fetch, data efficiently and leverage caching for better performance.",
-    },
-    {
-      icon: "gauge",
-      title: "Performance Optimization",
-      description: "Optimize rendering, assets, and bundle size for faster apps.",
-    },
-    {
-      icon: "cloud",
-      title: "Deployment & Scaling",
-      description: "Deploy with confidence and scale your Next.js applications.",
-    },
-  ]
+  const outcomes: LearningOutcome[] = course.learningOutcomes || []
+
+  const toggleModule = (moduleKey: string | number) => {
+    setExpandedModules((prev) => ({
+      ...prev,
+      [moduleKey]: !prev[moduleKey],
+    }))
+  }
 
   const displayedModules = showAllModules ? course.modules : course.modules.slice(0, 6)
 
@@ -288,52 +278,54 @@ export function CourseDetailPage() {
         </section>
 
         {/* Section: What you'll learn */}
-        <section className="mt-16 sm:mt-20">
-          <div className="flex items-end justify-between">
-            <div className="flex items-center gap-3">
-              <Lightbulb className="size-7 text-emerald-500" />
-              <h2 className="font-sans text-2xl font-bold tracking-tight text-neutral-900 sm:text-3xl dark:text-white">
-                What you'll learn
-              </h2>
+        {outcomes.length > 0 && (
+          <section className="mt-16 sm:mt-20">
+            <div className="flex items-end justify-between">
+              <div className="flex items-center gap-3">
+                <Lightbulb className="size-7 text-emerald-500" />
+                <h2 className="font-sans text-2xl font-bold tracking-tight text-neutral-900 sm:text-3xl dark:text-white">
+                  What you'll learn
+                </h2>
+              </div>
+              <div className="hidden sm:block -rotate-6 font-['Caveat',cursive] text-2xl font-bold text-emerald-500 leading-tight text-right">
+                <span className="block">Build</span>
+                <span className="block">for real world</span>
+                <svg viewBox="0 0 120 12" fill="none" className="ml-auto -mt-1 w-28 text-emerald-500">
+                  <path
+                    d="M4 8 C 30 2, 70 2, 116 8"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </div>
             </div>
-            <div className="hidden sm:block -rotate-6 font-['Caveat',cursive] text-2xl font-bold text-emerald-500 leading-tight text-right">
-              <span className="block">Build</span>
-              <span className="block">for real world</span>
-              <svg viewBox="0 0 120 12" fill="none" className="ml-auto -mt-1 w-28 text-emerald-500">
-                <path
-                  d="M4 8 C 30 2, 70 2, 116 8"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </div>
-          </div>
 
-          <div className="mt-8 grid gap-6 sm:grid-cols-2">
-            {outcomes.map((outcome, idx) => {
-              const IconComponent = getOutcomeIcon(outcome.icon)
-              return (
-                <div
-                  key={idx}
-                  className="flex items-start gap-4 rounded-2xl border border-neutral-200/80 bg-white p-6 shadow-xs transition hover:border-emerald-200 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-emerald-900"
-                >
-                  <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400">
-                    <IconComponent className="size-6" />
+            <div className="mt-8 grid gap-6 sm:grid-cols-2">
+              {outcomes.map((outcome, idx) => {
+                const IconComponent = getOutcomeIcon(outcome.icon)
+                return (
+                  <div
+                    key={idx}
+                    className="flex items-start gap-4 rounded-2xl border border-neutral-200/80 bg-white p-6 shadow-xs transition hover:border-emerald-200 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-emerald-900"
+                  >
+                    <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400">
+                      <IconComponent className="size-6" />
+                    </div>
+                    <div>
+                      <h3 className="font-sans text-base font-bold text-neutral-900 dark:text-white">
+                        {outcome.title}
+                      </h3>
+                      <p className="mt-1 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
+                        {outcome.description}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-sans text-base font-bold text-neutral-900 dark:text-white">
-                      {outcome.title}
-                    </h3>
-                    <p className="mt-1 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
-                      {outcome.description}
-                    </p>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        </section>
+                )
+              })}
+            </div>
+          </section>
+        )}
 
         {/* Section: Course Content */}
         <section className="mt-16 sm:mt-20">
@@ -353,40 +345,81 @@ export function CourseDetailPage() {
             </div>
 
             {/* Modules List */}
-            <div className="mt-4 space-y-1">
-              {displayedModules.map((moduleItem, index) => {
-                const title = typeof moduleItem === "string" ? moduleItem : moduleItem.title
-                const description =
-                  typeof moduleItem === "string"
-                    ? "Comprehensive lesson and practice exercises."
-                    : moduleItem.description
-                const duration = typeof moduleItem === "string" ? "45m" : moduleItem.duration || "45m"
+            <div className="mt-4 divide-y divide-neutral-100 dark:divide-neutral-800">
+              {displayedModules.map((moduleItem: CourseModule, index: number) => {
+                const moduleKey = moduleItem.id ?? index
+                const isExpanded = Boolean(expandedModules[moduleKey])
+                const lessonsCount = moduleItem.lessons?.length || 0
 
                 return (
-                  <div
-                    key={index}
-                    className="group flex items-center justify-between rounded-xl p-4 transition hover:bg-neutral-50 dark:hover:bg-neutral-800/50"
-                  >
-                    <div className="flex items-center gap-4 min-w-0">
-                      <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-emerald-50 font-sans text-base font-bold text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300">
-                        {index + 1}
-                      </span>
-                      <div className="min-w-0">
-                        <h3 className="truncate font-sans text-base font-semibold text-neutral-900 group-hover:text-emerald-600 dark:text-white dark:group-hover:text-emerald-400">
-                          {title}
-                        </h3>
-                        {description && (
-                          <p className="truncate text-xs sm:text-sm text-neutral-500 dark:text-neutral-400">
-                            {description}
-                          </p>
-                        )}
+                  <div key={moduleKey} className="py-2">
+                    <button
+                      type="button"
+                      onClick={() => toggleModule(moduleKey)}
+                      className="group flex w-full items-center justify-between rounded-xl p-3 text-left transition hover:bg-neutral-50 dark:hover:bg-neutral-800/50"
+                    >
+                      <div className="flex items-center gap-4 min-w-0">
+                        <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-emerald-50 font-sans text-base font-bold text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300">
+                          {index + 1}
+                        </span>
+                        <div className="min-w-0">
+                          <h3 className="truncate font-sans text-base font-semibold text-neutral-900 group-hover:text-emerald-600 dark:text-white dark:group-hover:text-emerald-400">
+                            {moduleItem.title}
+                          </h3>
+                          {moduleItem.description && (
+                            <p className="truncate text-xs sm:text-sm text-neutral-500 dark:text-neutral-400">
+                              {moduleItem.description}
+                            </p>
+                          )}
+                        </div>
                       </div>
-                    </div>
 
-                    <div className="ml-4 flex shrink-0 items-center gap-4 text-sm text-neutral-500 dark:text-neutral-400">
-                      <span className="font-medium">{duration}</span>
-                      <ChevronDown className="size-5 text-neutral-400 transition-transform group-hover:text-neutral-600 dark:group-hover:text-neutral-300" />
-                    </div>
+                      <div className="ml-4 flex shrink-0 items-center gap-3 text-sm text-neutral-500 dark:text-neutral-400">
+                        <span className="text-xs font-medium">
+                          {lessonsCount} {lessonsCount === 1 ? "lesson" : "lessons"}
+                          {moduleItem.duration ? ` • ${moduleItem.duration}` : ""}
+                        </span>
+                        <ChevronDown
+                          className={cn(
+                            "size-5 text-neutral-400 transition-transform group-hover:text-neutral-600 dark:group-hover:text-neutral-300",
+                            isExpanded && "rotate-180"
+                          )}
+                        />
+                      </div>
+                    </button>
+
+                    {/* Expanded lessons list */}
+                    {isExpanded && moduleItem.lessons && moduleItem.lessons.length > 0 && (
+                      <div className="ml-6 sm:ml-14 my-2 space-y-2 border-l-2 border-emerald-100 pl-4 sm:pl-6 dark:border-emerald-900/60">
+                        {moduleItem.lessons.map((lesson, lIdx) => (
+                          <Link
+                            key={lesson.id || lIdx}
+                            to={`/courses/${course.id}/learn?lesson=${lesson.slug || lesson.id}`}
+                            className="group flex items-center justify-between rounded-lg p-2 transition hover:bg-emerald-50/50 dark:hover:bg-neutral-800/60"
+                          >
+                            <div className="flex items-center gap-3 min-w-0">
+                              <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">
+                                <Play className="size-3 fill-current ml-0.5" />
+                              </div>
+                              <span className="truncate text-sm font-medium text-neutral-700 group-hover:text-emerald-600 dark:text-neutral-300 dark:group-hover:text-emerald-400">
+                                {lesson.title}
+                              </span>
+                            </div>
+
+                            <div className="ml-4 flex shrink-0 items-center gap-2.5">
+                              {lesson.freePreview && (
+                                <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+                                  Free Preview
+                                </span>
+                              )}
+                              <span className="text-xs text-neutral-400">
+                                {lesson.durationFormatted}
+                              </span>
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 )
               })}
@@ -408,6 +441,46 @@ export function CourseDetailPage() {
             )}
           </div>
         </section>
+
+        {/* Section: Instructor */}
+        {course.instructor && (
+          <section className="mt-16 sm:mt-20">
+            <div className="rounded-2xl border border-neutral-200/80 bg-white p-6 sm:p-8 shadow-xs dark:border-neutral-800 dark:bg-neutral-900">
+              <h2 className="font-sans text-2xl font-bold tracking-tight text-neutral-900 sm:text-3xl dark:text-white">
+                Instructor
+              </h2>
+              <div className="mt-6 flex flex-col sm:flex-row items-start gap-6">
+                <img
+                  src={course.instructor.avatar}
+                  alt={course.instructor.name}
+                  className="size-20 rounded-2xl object-cover border border-neutral-200 dark:border-neutral-700"
+                />
+                <div className="flex-1">
+                  <h3 className="text-xl font-bold text-neutral-900 dark:text-white">
+                    {course.instructor.name}
+                  </h3>
+                  {course.instructor.expertise && course.instructor.expertise.length > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {course.instructor.expertise.map((skill, sIdx) => (
+                        <span
+                          key={sIdx}
+                          className="rounded-full bg-neutral-100 px-3 py-1 text-xs font-medium text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                  {course.instructor.bio && (
+                    <p className="mt-3 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
+                      {course.instructor.bio}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
       </div>
 
       {/* Floating / Sticky Progress Bar */}
