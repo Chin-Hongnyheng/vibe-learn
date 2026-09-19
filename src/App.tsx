@@ -1,6 +1,7 @@
 import { CourseCard } from "@/components/common/course-card"
 import { MOCK_COURSES } from "@/lib/mock-data"
 import { HeroSection } from "@/sections/herosection"
+import { Footer } from "@/sections/footer"
 
 export function App() {
   return (
@@ -15,6 +16,7 @@ export function App() {
           <CourseCard key={course.id} course={course} progress={(i + 1) * 2} />
         ))}
       </section>
+      <Footer />
     </main>
   )
 }
