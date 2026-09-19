@@ -12,6 +12,8 @@ dist
 dist-ssr
 *.local
 
+.env
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -23,3 +25,7 @@ dist-ssr
 *.sln
 *.sw?
 *DS_Store
+
+# Documentation and design assets
+docs/
+docs 2/

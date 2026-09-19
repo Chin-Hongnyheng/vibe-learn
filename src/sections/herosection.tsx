@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import { ArrowRight, Sparkle } from "lucide-react"
 
 import heroLearning from "@/assets/hero-learning.png"
@@ -34,8 +35,8 @@ export function HeroSection() {
             hands-on practice and personalized learning paths.
           </p>
 
-          <a
-            href="#courses"
+          <Link
+            to="/courses"
             className={cn(
               buttonVariants(),
               "mt-7 min-h-14 gap-4 rounded-md bg-primary-600 px-7 py-3 font-sans text-base font-semibold text-primary-foreground shadow-sm hover:bg-primary-700 active:bg-primary-800 sm:text-lg"
@@ -43,7 +44,7 @@ export function HeroSection() {
           >
             Explore Courses
             <ArrowRight aria-hidden="true" className="size-5" />
-          </a>
+          </Link>
         </div>
 
         <img

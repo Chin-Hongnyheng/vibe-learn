@@ -1,3 +1,21 @@
+export type CourseModule = {
+  id?: number | string;
+  title: string;
+  description?: string;
+  duration?: string;
+  lessons?: Array<{
+    id?: string;
+    title: string;
+    duration?: string;
+  }>;
+};
+
+export type LearningOutcome = {
+  icon: string;
+  title: string;
+  description: string;
+};
+
 export type Course = {
   id: number;
   title: string;
@@ -7,10 +25,13 @@ export type Course = {
   imgUrl: string;
   level: "Beginner" | "Intermediate" | "Advanced";
   duration: number;
-  modules: string[];
+  durationFormatted?: string;
+  modules: (string | CourseModule)[];
+  learningOutcomes?: LearningOutcome[];
   rating: number; 
   reviews: number;
   enrolled: number;
+  studentsFormatted?: string;
   price: number; 
   isFree: boolean;
   isFeatured: boolean;
