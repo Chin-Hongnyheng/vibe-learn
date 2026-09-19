@@ -16,13 +16,13 @@ export function ShowcaseFeatureItem({
 }: ShowcaseFeatureItemProps) {
   return (
     <div className={cn("flex flex-col items-start", className)}>
-      <div className="flex size-12 items-center justify-center rounded-full bg-primary-100/70 text-primary-600 dark:bg-primary-950/60 dark:text-primary-400">
+      <div className="flex size-14 items-center justify-center rounded-full bg-primary-100/75 text-primary-600 dark:bg-primary-950/60 dark:text-primary-400">
         {icon}
       </div>
-      <h3 className="mt-4 text-base font-bold tracking-tight text-neutral-900 sm:text-lg dark:text-white">
+      <h3 className="mt-5 text-lg font-bold tracking-tight text-neutral-900 sm:text-xl dark:text-white">
         {title}
       </h3>
-      <p className="mt-1 text-sm leading-relaxed text-neutral-500 dark:text-neutral-400">
+      <p className="mt-2 text-sm leading-relaxed text-neutral-500 sm:text-[15px] dark:text-neutral-400">
         {description}
       </p>
     </div>
