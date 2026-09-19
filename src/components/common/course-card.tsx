@@ -9,12 +9,6 @@ type CourseCardProps = {
   className?: string
 }
 
-const LEVEL_STYLES: Record<Course["level"], string> = {
-  Beginner: "bg-emerald-50 text-emerald-700",
-  Intermediate: "bg-amber-50 text-amber-700",
-  Advanced: "bg-rose-50 text-rose-700",
-}
-
 function formatDuration(minutes: number) {
   const h = Math.floor(minutes / 60)
   const m = minutes % 60
@@ -51,12 +45,7 @@ export function CourseCard({ course, progress = 0, onClick, className }: CourseC
         </button>
       </div>
 
-      <span
-        className={cn(
-          "mt-6 w-fit rounded-full px-3 py-1 text-sm font-medium",
-          LEVEL_STYLES[course.level]
-        )}
-      >
+      <span className="mt-6 w-fit rounded-full bg-emerald-50 px-3 py-1 text-sm font-medium text-emerald-700">
         {course.tag}
       </span>
 
