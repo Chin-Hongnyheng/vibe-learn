@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react"
 import { Link, useParams, useSearchParams } from "react-router-dom"
+import { useUser } from "@clerk/clerk-react"
+import { courseService } from "@/services/course-service"
+import { progressService } from "@/services/progress-service"
 import {
   ArrowLeft,
   ArrowRight,
@@ -23,14 +26,29 @@ import type { Course, CourseLesson, CourseModule } from "@/types/courses"
 
 export function LearningPage() {
   const { id } = useParams<{ id: string }>()
+  const { user } = useUser()
   const [searchParams, setSearchParams] = useSearchParams()
 
   const savedCourseId =
     typeof window !== "undefined" ? localStorage.getItem("lastVisitedCourseId") : null
   const effectiveId = id || savedCourseId || "1"
   const courseId = Number(effectiveId)
-  const course: Course =
+  const initialCourse: Course =
     MOCK_COURSES.find((c) => c.id === courseId || c.slug === effectiveId) || MOCK_COURSES[0]
+  const [course, setCourse] = useState<Course>(initialCourse)
+
+  useEffect(() => {
+    courseService.fetchCourseById(effectiveId).then((c) => {
+      if (c) setCourse(c)
+    })
+  }, [effectiveId])
+
+  // Save visited course to local storage
+  useEffect(() => {
+    if (course?.id) {
+      localStorage.setItem("lastVisitedCourseId", String(course.id))
+    }
+  }, [course?.id])
 
   // Flatten lessons to easily find current and next/previous
   const allLessonsWithModule = course.modules.flatMap((m, mIdx) =>
@@ -48,13 +66,6 @@ export function LearningPage() {
     setPrevCourseId(course.id)
     setSelectedLessonId(null)
   }
-
-  // Save visited course to local storage
-  useEffect(() => {
-    if (course?.id) {
-      localStorage.setItem("lastVisitedCourseId", String(course.id))
-    }
-  }, [course?.id])
 
   const lessonQuery = searchParams.get("lesson")
   const activeIdOrSlug = selectedLessonId ?? lessonQuery
@@ -96,6 +107,22 @@ export function LearningPage() {
     }
   }
 
+  // Load user completed lessons from progressService
+  useEffect(() => {
+    if (!user?.id || !course?.slug) return
+    progressService.fetchCompletedLessonIds(user.id, course.slug).then((ids) => {
+      if (ids.length > 0) {
+        setCompletedLessonIds(new Set(ids))
+      }
+    })
+  }, [user?.id, course?.slug])
+
+  // Track active lesson resume position
+  useEffect(() => {
+    if (!user?.id || !activeLesson?.id || !course?.slug) return
+    progressService.updateResumeTimestamp(user.id, activeLesson.id, course.slug, 1).catch(() => {})
+  }, [user?.id, activeLesson?.id, course?.slug])
+
   const toggleModule = (mIdx: number) => {
     setExpandedModules((prev) => ({
       ...prev,
@@ -104,15 +131,24 @@ export function LearningPage() {
   }
 
   const toggleLessonComplete = (lessonId: string) => {
+    const isCurrentlyCompleted = completedLessonIds.has(lessonId)
+    const nextCompleted = !isCurrentlyCompleted
+
     setCompletedLessonIds((prev) => {
       const next = new Set(prev)
-      if (next.has(lessonId)) {
+      if (isCurrentlyCompleted) {
         next.delete(lessonId)
       } else {
         next.add(lessonId)
       }
       return next
     })
+
+    if (user?.id && course?.slug) {
+      progressService.markLessonComplete(user.id, lessonId, course.slug, nextCompleted).catch((err) => {
+        console.warn("Failed to persist lesson completion:", err)
+      })
+    }
   }
 
   const percentComplete = allLessonsWithModule.length

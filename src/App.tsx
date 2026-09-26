@@ -4,6 +4,7 @@ import { HomePage } from "@/pages/home-page"
 import { CoursesPage } from "@/pages/courses-page"
 import { CourseDetailPage } from "@/pages/course-detail-page"
 import { LearningPage } from "@/pages/learning-page"
+import { MyLearningPage } from "@/pages/my-learning-page"
 import { SignInPage } from "@/pages/sign-in-page"
 import { SignUpPage } from "@/pages/sign-up-page"
 import { ProtectedRoute } from "@/components/auth/protected-route"
@@ -39,7 +40,7 @@ export function App() {
             path="my-learning"
             element={
               <ProtectedRoute>
-                <LearningPage />
+                <MyLearningPage />
               </ProtectedRoute>
             }
           />
@@ -47,7 +48,7 @@ export function App() {
             path="my-learning/:id"
             element={
               <ProtectedRoute>
-                <LearningPage />
+                <MyLearningPage />
               </ProtectedRoute>
             }
           />
