@@ -1,5 +1,8 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Link, useParams } from "react-router-dom"
+import { useUser } from "@clerk/clerk-react"
+import { courseService } from "@/services/course-service"
+import { progressService, type UserProgressState } from "@/services/progress-service"
 import {
   ArrowRight,
   Bookmark,
@@ -54,6 +57,7 @@ function CourseHeroCover({ course }: { course: Course }) {
 
 export function CourseDetailPage() {
   const { id } = useParams<{ id: string }>()
+  const { user } = useUser()
   const [showAllModules, setShowAllModules] = useState(false)
   const [isBookmarked, setIsBookmarked] = useState(false)
   const [expandedModules, setExpandedModules] = useState<Record<string | number, boolean>>({
@@ -61,8 +65,33 @@ export function CourseDetailPage() {
   })
 
   const courseId = Number(id)
-  const course: Course =
+  const initialFallback =
     MOCK_COURSES.find((c) => c.id === courseId || c.slug === id) || MOCK_COURSES[0]
+  const [course, setCourse] = useState<Course>(initialFallback)
+  const [userProgress, setUserProgress] = useState<UserProgressState[]>([])
+
+  useEffect(() => {
+    if (!id) return
+    courseService.fetchCourseById(id).then((c) => {
+      if (c) setCourse(c)
+    })
+  }, [id])
+
+  useEffect(() => {
+    if (!user?.id || !course?.slug) return
+    progressService.fetchUserProgress(user.id, course.slug).then((p) => {
+      setUserProgress(p)
+    })
+  }, [user?.id, course?.slug])
+
+  const allLessons = course.modules.flatMap((m) => m.lessons || [])
+  const completedSet = new Set(userProgress.filter((p) => p.isCompleted).map((p) => p.lessonId))
+  const resumeLesson =
+    allLessons.find((l) => !completedSet.has(l.id) && !completedSet.has(l.slug)) || allLessons[0]
+  const resumeUrl = resumeLesson
+    ? `/courses/${course.id}/learn?lesson=${resumeLesson.slug}`
+    : `/courses/${course.id}/learn`
+  const hasStarted = completedSet.size > 0
 
   const outcomes: LearningOutcome[] = course.learningOutcomes || []
 
@@ -167,11 +196,11 @@ export function CourseDetailPage() {
             {/* Action Buttons */}
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <Link
-                to={`/courses/${course.id}/learn`}
+                to={resumeUrl}
                 className="inline-flex items-center gap-2.5 rounded-xl bg-emerald-500 px-6 py-3.5 text-base font-semibold text-white shadow-sm transition hover:bg-emerald-600 active:bg-emerald-700"
               >
                 <Play className="size-4 fill-current" />
-                Continue Learning
+                {hasStarted ? "Resume Learning" : "Start Learning"}
                 <ArrowRight className="size-4" />
               </Link>
 
@@ -411,7 +440,7 @@ export function CourseDetailPage() {
                 Your Progress
               </span>
               <span className="block font-sans text-xs sm:text-base font-bold text-neutral-900 dark:text-white">
-                35% complete
+                {allLessons.length > 0 ? Math.round((completedSet.size / allLessons.length) * 100) : 0}% complete
               </span>
             </div>
           </div>
@@ -419,16 +448,21 @@ export function CourseDetailPage() {
           {/* Center: Progress Bar */}
           <div className="hidden md:block flex-1 max-w-md">
             <div className="h-2.5 w-full overflow-hidden rounded-full bg-neutral-100 dark:bg-neutral-800">
-              <div className="h-full rounded-full bg-emerald-500 transition-all duration-500 w-[35%]" />
+              <div
+                className="h-full rounded-full bg-emerald-500 transition-all duration-500"
+                style={{
+                  width: `${allLessons.length > 0 ? Math.round((completedSet.size / allLessons.length) * 100) : 0}%`,
+                }}
+              />
             </div>
           </div>
 
           {/* Right: Continue Learning Button */}
           <Link
-            to={`/courses/${course.id}/learn`}
+            to={resumeUrl}
             className="inline-flex shrink-0 items-center gap-1.5 sm:gap-2 rounded-xl bg-emerald-500 px-4 sm:px-6 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-600 active:bg-emerald-700"
           >
-            Continue Learning
+            {hasStarted ? "Continue Learning" : "Start Learning"}
             <ArrowRight className="size-3.5 sm:size-4" />
           </Link>
         </div>
