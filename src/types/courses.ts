@@ -1,13 +1,35 @@
+export type LessonResource = {
+  type: string;
+  title: string;
+  description?: string;
+  url: string;
+};
+
+export type CourseLesson = {
+  id: string;
+  title: string;
+  slug: string;
+  videoUrl: string;
+  youtubeVideoId: string;
+  thumbnailUrl?: string;
+  duration: number; // in seconds
+  durationFormatted: string;
+  freePreview: boolean;
+  studentCount?: number;
+  notes?: unknown[];
+  notesText?: string;
+  keyPoints?: string[];
+  proTip?: string;
+  resources?: LessonResource[];
+};
+
 export type CourseModule = {
   id?: number | string;
   title: string;
+  summary?: string;
   description?: string;
   duration?: string;
-  lessons?: Array<{
-    id?: string;
-    title: string;
-    duration?: string;
-  }>;
+  lessons?: CourseLesson[];
 };
 
 export type LearningOutcome = {
@@ -18,21 +40,22 @@ export type LearningOutcome = {
 
 export type Course = {
   id: number;
+  slug: string;
   title: string;
   description: string;
   category: string;
   tag: string;
   imgUrl: string;
   level: "Beginner" | "Intermediate" | "Advanced";
-  duration: number;
+  duration: number; // in minutes
   durationFormatted?: string;
-  modules: (string | CourseModule)[];
+  modules: CourseModule[];
   learningOutcomes?: LearningOutcome[];
-  rating: number; 
+  rating: number;
   reviews: number;
   enrolled: number;
   studentsFormatted?: string;
-  price: number; 
+  price: number;
   isFree: boolean;
   isFeatured: boolean;
   language: string;
@@ -40,27 +63,22 @@ export type Course = {
     name: string;
     avatar: string;
     bio?: string;
+    expertise?: string[];
   };
-  createdAt: string; 
+  createdAt: string;
 };
-
 
 export const CATEGORIES = [
   "Web Development",
+  "AI Engineering",
+  "Backend & Infrastructure",
+  "Data",
+  "Languages",
+  "Security",
   "Mobile Development",
-  "Data Science",
-  "Machine Learning",
-  "AI",
   "UI/UX",
   "Graphic Design",
   "Digital Marketing",
-  "Business",
   "Finance",
   "Photography",
-  "Video Editing",
-  "Music",
-  "Health & Fitness",
-  "Other",
 ] as const;
-
-

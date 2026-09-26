@@ -29,3 +29,13 @@ dist-ssr
 # Documentation and design assets
 docs/
 docs 2/
+
+# Agent caches and skills
+.agents/
+.claude/
+.codebuddy/
+.hermes/
+.kiro/
+.qoder/
+skills-lock.json
+
