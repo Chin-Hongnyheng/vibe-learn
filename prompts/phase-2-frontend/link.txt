@@ -1,0 +1,2 @@
+"If RLS were disabled, any attacker who inspects the browser's network requests to obtain the public Supabase anon key could use it to read, modify, or delete every habit and daily log belonging to every user in the database — with a single API call and no authentication required."
+

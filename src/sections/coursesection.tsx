@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom"
 import { CourseCard } from "@/components/common/course-card"
-import { MOCK_COURSES } from "@/lib/mock-data"
 import { cn } from "@/lib/utils"
 import type { Course } from "@/types/courses"
 
@@ -9,7 +8,7 @@ type CourseSectionProps = {
   onCourseClick?: (course: Course) => void
 }
 
-export function CourseSection({ courses = MOCK_COURSES.slice(0, 3), onCourseClick }: CourseSectionProps) {
+export function CourseSection({ courses = [], onCourseClick }: CourseSectionProps) {
   const navigate = useNavigate()
   const handleCourseClick = onCourseClick || ((course: Course) => navigate(`/courses/${course.id}`))
 
@@ -35,14 +34,18 @@ export function CourseSection({ courses = MOCK_COURSES.slice(0, 3), onCourseClic
         </div>
 
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {courses.map((course) => (
-            <CourseCard
-              key={course.id}
-              course={course}
-              progress={25}
-              onClick={() => handleCourseClick(course)}
-            />
-          ))}
+          {courses.length === 0
+            ? Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="h-72 animate-pulse rounded-2xl bg-neutral-100" />
+              ))
+            : courses.map((course) => (
+                <CourseCard
+                  key={course.id}
+                  course={course}
+                  progress={25}
+                  onClick={() => handleCourseClick(course)}
+                />
+              ))}
         </div>
       </div>
     </section>

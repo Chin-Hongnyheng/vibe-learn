@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Link, useParams } from "react-router-dom"
 import {
   ArrowRight,
@@ -18,7 +18,7 @@ import {
   Play,
   Users,
 } from "lucide-react"
-import { MOCK_COURSES } from "@/lib/mock-data"
+import { getCourseById } from "@/lib/api/courses"
 import { cn } from "@/lib/utils"
 import type { Course, LearningOutcome } from "@/types/courses"
 
@@ -141,9 +141,44 @@ export function CourseDetailPage() {
   const { id } = useParams<{ id: string }>()
   const [showAllModules, setShowAllModules] = useState(false)
   const [isBookmarked, setIsBookmarked] = useState(false)
+  const [course, setCourse] = useState<Course | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [fetchError, setFetchError] = useState<string | null>(null)
 
   const courseId = Number(id)
-  const course = MOCK_COURSES.find((c) => c.id === courseId) || MOCK_COURSES[0]
+
+  useEffect(() => {
+    if (!courseId) return
+    getCourseById(courseId)
+      .then((c) => setCourse(c))
+      .catch((err: Error) => setFetchError(err.message))
+      .finally(() => setLoading(false))
+  }, [courseId])
+
+  if (loading) {
+    return (
+      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+        <div className="h-10 w-64 animate-pulse rounded-lg bg-neutral-100" />
+        <div className="mt-8 h-64 animate-pulse rounded-2xl bg-neutral-100" />
+      </div>
+    )
+  }
+
+  if (fetchError) {
+    return (
+      <div className="mx-auto max-w-6xl px-4 py-16 text-center sm:px-6 lg:px-8">
+        <p className="text-sm text-red-600">Failed to load course: {fetchError}</p>
+      </div>
+    )
+  }
+
+  if (!course) {
+    return (
+      <div className="mx-auto max-w-6xl px-4 py-16 text-center sm:px-6 lg:px-8">
+        <p className="text-sm text-neutral-500">Course not found.</p>
+      </div>
+    )
+  }
 
   const outcomes: LearningOutcome[] = course.learningOutcomes || [
     {

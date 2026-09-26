@@ -8,6 +8,7 @@ import { SignInPage } from "@/pages/sign-in-page"
 import { SignUpPage } from "@/pages/sign-up-page"
 import { ProtectedRoute } from "@/components/auth/protected-route"
 import { NotFoundPage } from "@/pages/not-found-page"
+import { HabitsPage } from "@/pages/habits-page"
 
 export function App() {
   return (
@@ -48,6 +49,14 @@ export function App() {
             element={
               <ProtectedRoute>
                 <LearningPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="habits"
+            element={
+              <ProtectedRoute>
+                <HabitsPage />
               </ProtectedRoute>
             }
           />

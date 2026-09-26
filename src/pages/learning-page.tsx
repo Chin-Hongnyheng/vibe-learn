@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Link, useParams } from "react-router-dom"
 import {
   ArrowLeft,
@@ -24,14 +24,22 @@ import {
   Users,
   Volume2,
 } from "lucide-react"
-import { MOCK_COURSES } from "@/lib/mock-data"
+import { getCourseById } from "@/lib/api/courses"
 import { cn } from "@/lib/utils"
 import type { Course } from "@/types/courses"
 
 export function LearningPage() {
   const { id } = useParams<{ id: string }>()
   const courseId = Number(id) || 1
-  const course: Course = MOCK_COURSES.find((c) => c.id === courseId) || MOCK_COURSES[0]
+  const [course, setCourse] = useState<Course | null>(null)
+  const [courseLoading, setCourseLoading] = useState(true)
+
+  useEffect(() => {
+    getCourseById(courseId)
+      .then(setCourse)
+      .catch(() => setCourse(null))
+      .finally(() => setCourseLoading(false))
+  }, [courseId])
 
   const [activeTab, setActiveTab] = useState<"content" | "notes">("content")
   const [isPlaying, setIsPlaying] = useState(false)
@@ -66,6 +74,23 @@ export function LearningPage() {
     { id: 11, title: "Monitoring & Logging", duration: "1h 8m", completed: false },
     { id: 12, title: "Best Practices & Next Steps", duration: "52m", completed: false },
   ]
+
+  if (courseLoading) {
+    return (
+      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+        <div className="h-10 w-64 animate-pulse rounded-lg bg-neutral-100" />
+        <div className="mt-8 h-64 animate-pulse rounded-2xl bg-neutral-100" />
+      </div>
+    )
+  }
+
+  if (!course) {
+    return (
+      <div className="mx-auto max-w-6xl px-4 py-16 text-center sm:px-6 lg:px-8">
+        <p className="text-sm text-neutral-500">Course not found.</p>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-[#FAFAFC] pb-20 dark:bg-background">

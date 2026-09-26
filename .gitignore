@@ -25,7 +25,3 @@ dist-ssr
 *.sln
 *.sw?
 *DS_Store
-
-# Documentation and design assets
-docs/
-docs 2/
