@@ -20,7 +20,7 @@ import {
 } from "lucide-react"
 import { MOCK_COURSES } from "@/lib/mock-data"
 import { cn } from "@/lib/utils"
-import type { Course, LearningOutcome } from "@/types/courses"
+import type { Course, CourseModule, LearningOutcome } from "@/types/courses"
 
 function formatDuration(minutes: number) {
   const h = Math.floor(minutes / 60)
@@ -45,93 +45,8 @@ function getOutcomeIcon(iconName: string) {
 }
 
 function CourseHeroCover({ course }: { course: Course }) {
-  const isNextJs =
-    course.title.toLowerCase().includes("next.js") || course.tag.toLowerCase().includes("next")
-
-  if (isNextJs) {
-    return (
-      <div className="relative aspect-square w-full max-w-[340px] shrink-0 overflow-hidden rounded-3xl border border-emerald-950/60 bg-[#07130e] p-6 shadow-xl flex flex-col items-center justify-center">
-        {/* Radial glow */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.28)_0%,transparent_70%)]" />
-
-        {/* Decorative faint code background */}
-        <div className="pointer-events-none absolute inset-0 select-none overflow-hidden p-4 font-mono text-[9px] leading-tight text-emerald-500/15 opacity-60">
-          <div className="flex justify-between">
-            <div>
-              <p>import &#123; Suspense &#125; from 'react'</p>
-              <p>const cache = new Map()</p>
-              <p>export async function fetchCourse()</p>
-              <p>const router = useRouter()</p>
-              <p>const [state, dispatch] = useReducer()</p>
-            </div>
-            <div className="text-right">
-              <p>// Server Actions</p>
-              <p>export async function mutate()</p>
-              <p>revalidatePath('/courses')</p>
-              <p>cookies().get('session')</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Next.js N Logo Box */}
-        <div className="relative z-10 flex size-36 items-center justify-center rounded-2xl border border-white/20 bg-black/85 shadow-2xl backdrop-blur-sm">
-          <svg viewBox="0 0 180 180" className="size-24 text-white" fill="none">
-            <mask
-              id="next-mask"
-              maskUnits="userSpaceOnUse"
-              x="0"
-              y="0"
-              width="180"
-              height="180"
-              style={{ maskType: "alpha" }}
-            >
-              <circle cx="90" cy="90" r="90" fill="black" />
-            </mask>
-            <g mask="url(#next-mask)">
-              <circle cx="90" cy="90" r="90" fill="black" stroke="white" strokeWidth="6" />
-              <path
-                d="M149.508 157.438L69.142 54H54V125.97H66.1136V69.3836L139.999 164.845C143.333 162.614 146.509 160.138 149.508 157.438Z"
-                fill="url(#paint0_linear)"
-              />
-              <rect x="115" y="54" width="12" height="72" fill="url(#paint1_linear)" />
-            </g>
-            <defs>
-              <linearGradient
-                id="paint0_linear"
-                x1="109"
-                y1="116.5"
-                x2="144.5"
-                y2="160.5"
-                gradientUnits="userSpaceOnUse"
-              >
-                <stop stopColor="white" />
-                <stop offset="1" stopColor="white" stopOpacity="0" />
-              </linearGradient>
-              <linearGradient
-                id="paint1_linear"
-                x1="121"
-                y1="54"
-                x2="120.799"
-                y2="106.875"
-                gradientUnits="userSpaceOnUse"
-              >
-                <stop stopColor="white" />
-                <stop offset="1" stopColor="white" stopOpacity="0" />
-              </linearGradient>
-            </defs>
-          </svg>
-        </div>
-
-        {/* NEXT.JS Label */}
-        <span className="relative z-10 mt-6 font-sans text-xl font-bold tracking-[0.25em] text-white">
-          NEXT<span className="text-emerald-400">.JS</span>
-        </span>
-      </div>
-    )
-  }
-
   return (
-    <div className="relative aspect-square w-full max-w-[340px] shrink-0 overflow-hidden rounded-3xl border border-neutral-200 bg-neutral-900 shadow-xl dark:border-neutral-800">
+    <div className="relative aspect-square w-full max-w-[280px] sm:max-w-[340px] shrink-0 overflow-hidden rounded-3xl border border-neutral-200 bg-neutral-900 shadow-xl dark:border-neutral-800">
       <img src={course.imgUrl} alt={course.title} className="size-full object-cover" />
     </div>
   )
@@ -141,32 +56,22 @@ export function CourseDetailPage() {
   const { id } = useParams<{ id: string }>()
   const [showAllModules, setShowAllModules] = useState(false)
   const [isBookmarked, setIsBookmarked] = useState(false)
+  const [expandedModules, setExpandedModules] = useState<Record<string | number, boolean>>({
+    0: true,
+  })
 
   const courseId = Number(id)
-  const course = MOCK_COURSES.find((c) => c.id === courseId) || MOCK_COURSES[0]
+  const course: Course =
+    MOCK_COURSES.find((c) => c.id === courseId || c.slug === id) || MOCK_COURSES[0]
 
-  const outcomes: LearningOutcome[] = course.learningOutcomes || [
-    {
-      icon: "layers",
-      title: "App Router Foundations",
-      description: "Master the App Router, layouts, loading states, and nested routing.",
-    },
-    {
-      icon: "database",
-      title: "Data Fetching & Caching",
-      description: "Fetch, data efficiently and leverage caching for better performance.",
-    },
-    {
-      icon: "gauge",
-      title: "Performance Optimization",
-      description: "Optimize rendering, assets, and bundle size for faster apps.",
-    },
-    {
-      icon: "cloud",
-      title: "Deployment & Scaling",
-      description: "Deploy with confidence and scale your Next.js applications.",
-    },
-  ]
+  const outcomes: LearningOutcome[] = course.learningOutcomes || []
+
+  const toggleModule = (moduleKey: string | number) => {
+    setExpandedModules((prev) => ({
+      ...prev,
+      [moduleKey]: !prev[moduleKey],
+    }))
+  }
 
   const displayedModules = showAllModules ? course.modules : course.modules.slice(0, 6)
 
@@ -288,52 +193,54 @@ export function CourseDetailPage() {
         </section>
 
         {/* Section: What you'll learn */}
-        <section className="mt-16 sm:mt-20">
-          <div className="flex items-end justify-between">
-            <div className="flex items-center gap-3">
-              <Lightbulb className="size-7 text-emerald-500" />
-              <h2 className="font-sans text-2xl font-bold tracking-tight text-neutral-900 sm:text-3xl dark:text-white">
-                What you'll learn
-              </h2>
+        {outcomes.length > 0 && (
+          <section className="mt-16 sm:mt-20">
+            <div className="flex items-end justify-between">
+              <div className="flex items-center gap-3">
+                <Lightbulb className="size-7 text-emerald-500" />
+                <h2 className="font-sans text-2xl font-bold tracking-tight text-neutral-900 sm:text-3xl dark:text-white">
+                  What you'll learn
+                </h2>
+              </div>
+              <div className="hidden sm:block -rotate-6 font-['Caveat',cursive] text-2xl font-bold text-emerald-500 leading-tight text-right">
+                <span className="block">Build</span>
+                <span className="block">for real world</span>
+                <svg viewBox="0 0 120 12" fill="none" className="ml-auto -mt-1 w-28 text-emerald-500">
+                  <path
+                    d="M4 8 C 30 2, 70 2, 116 8"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </div>
             </div>
-            <div className="hidden sm:block -rotate-6 font-['Caveat',cursive] text-2xl font-bold text-emerald-500 leading-tight text-right">
-              <span className="block">Build</span>
-              <span className="block">for real world</span>
-              <svg viewBox="0 0 120 12" fill="none" className="ml-auto -mt-1 w-28 text-emerald-500">
-                <path
-                  d="M4 8 C 30 2, 70 2, 116 8"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </div>
-          </div>
 
-          <div className="mt-8 grid gap-6 sm:grid-cols-2">
-            {outcomes.map((outcome, idx) => {
-              const IconComponent = getOutcomeIcon(outcome.icon)
-              return (
-                <div
-                  key={idx}
-                  className="flex items-start gap-4 rounded-2xl border border-neutral-200/80 bg-white p-6 shadow-xs transition hover:border-emerald-200 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-emerald-900"
-                >
-                  <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400">
-                    <IconComponent className="size-6" />
+            <div className="mt-8 grid gap-6 sm:grid-cols-2">
+              {outcomes.map((outcome, idx) => {
+                const IconComponent = getOutcomeIcon(outcome.icon)
+                return (
+                  <div
+                    key={idx}
+                    className="flex items-start gap-4 rounded-2xl border border-neutral-200/80 bg-white p-6 shadow-xs transition hover:border-emerald-200 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-emerald-900"
+                  >
+                    <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400">
+                      <IconComponent className="size-6" />
+                    </div>
+                    <div>
+                      <h3 className="font-sans text-base font-bold text-neutral-900 dark:text-white">
+                        {outcome.title}
+                      </h3>
+                      <p className="mt-1 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
+                        {outcome.description}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-sans text-base font-bold text-neutral-900 dark:text-white">
-                      {outcome.title}
-                    </h3>
-                    <p className="mt-1 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
-                      {outcome.description}
-                    </p>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        </section>
+                )
+              })}
+            </div>
+          </section>
+        )}
 
         {/* Section: Course Content */}
         <section className="mt-16 sm:mt-20">
@@ -353,40 +260,81 @@ export function CourseDetailPage() {
             </div>
 
             {/* Modules List */}
-            <div className="mt-4 space-y-1">
-              {displayedModules.map((moduleItem, index) => {
-                const title = typeof moduleItem === "string" ? moduleItem : moduleItem.title
-                const description =
-                  typeof moduleItem === "string"
-                    ? "Comprehensive lesson and practice exercises."
-                    : moduleItem.description
-                const duration = typeof moduleItem === "string" ? "45m" : moduleItem.duration || "45m"
+            <div className="mt-4 divide-y divide-neutral-100 dark:divide-neutral-800">
+              {displayedModules.map((moduleItem: CourseModule, index: number) => {
+                const moduleKey = moduleItem.id ?? index
+                const isExpanded = Boolean(expandedModules[moduleKey])
+                const lessonsCount = moduleItem.lessons?.length || 0
 
                 return (
-                  <div
-                    key={index}
-                    className="group flex items-center justify-between rounded-xl p-4 transition hover:bg-neutral-50 dark:hover:bg-neutral-800/50"
-                  >
-                    <div className="flex items-center gap-4 min-w-0">
-                      <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-emerald-50 font-sans text-base font-bold text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300">
-                        {index + 1}
-                      </span>
-                      <div className="min-w-0">
-                        <h3 className="truncate font-sans text-base font-semibold text-neutral-900 group-hover:text-emerald-600 dark:text-white dark:group-hover:text-emerald-400">
-                          {title}
-                        </h3>
-                        {description && (
-                          <p className="truncate text-xs sm:text-sm text-neutral-500 dark:text-neutral-400">
-                            {description}
-                          </p>
-                        )}
+                  <div key={moduleKey} className="py-2">
+                    <button
+                      type="button"
+                      onClick={() => toggleModule(moduleKey)}
+                      className="group flex w-full items-center justify-between rounded-xl p-3 text-left transition hover:bg-neutral-50 dark:hover:bg-neutral-800/50"
+                    >
+                      <div className="flex items-center gap-4 min-w-0">
+                        <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-emerald-50 font-sans text-base font-bold text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300">
+                          {index + 1}
+                        </span>
+                        <div className="min-w-0">
+                          <h3 className="truncate font-sans text-base font-semibold text-neutral-900 group-hover:text-emerald-600 dark:text-white dark:group-hover:text-emerald-400">
+                            {moduleItem.title}
+                          </h3>
+                          {moduleItem.description && (
+                            <p className="truncate text-xs sm:text-sm text-neutral-500 dark:text-neutral-400">
+                              {moduleItem.description}
+                            </p>
+                          )}
+                        </div>
                       </div>
-                    </div>
 
-                    <div className="ml-4 flex shrink-0 items-center gap-4 text-sm text-neutral-500 dark:text-neutral-400">
-                      <span className="font-medium">{duration}</span>
-                      <ChevronDown className="size-5 text-neutral-400 transition-transform group-hover:text-neutral-600 dark:group-hover:text-neutral-300" />
-                    </div>
+                      <div className="ml-4 flex shrink-0 items-center gap-3 text-sm text-neutral-500 dark:text-neutral-400">
+                        <span className="text-xs font-medium">
+                          {lessonsCount} {lessonsCount === 1 ? "lesson" : "lessons"}
+                          {moduleItem.duration ? ` • ${moduleItem.duration}` : ""}
+                        </span>
+                        <ChevronDown
+                          className={cn(
+                            "size-5 text-neutral-400 transition-transform group-hover:text-neutral-600 dark:group-hover:text-neutral-300",
+                            isExpanded && "rotate-180"
+                          )}
+                        />
+                      </div>
+                    </button>
+
+                    {/* Expanded lessons list */}
+                    {isExpanded && moduleItem.lessons && moduleItem.lessons.length > 0 && (
+                      <div className="ml-6 sm:ml-14 my-2 space-y-2 border-l-2 border-emerald-100 pl-4 sm:pl-6 dark:border-emerald-900/60">
+                        {moduleItem.lessons.map((lesson, lIdx) => (
+                          <Link
+                            key={lesson.id || lIdx}
+                            to={`/courses/${course.id}/learn?lesson=${lesson.slug || lesson.id}`}
+                            className="group flex items-center justify-between rounded-lg p-2 transition hover:bg-emerald-50/50 dark:hover:bg-neutral-800/60"
+                          >
+                            <div className="flex items-center gap-3 min-w-0">
+                              <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">
+                                <Play className="size-3 fill-current ml-0.5" />
+                              </div>
+                              <span className="truncate text-sm font-medium text-neutral-700 group-hover:text-emerald-600 dark:text-neutral-300 dark:group-hover:text-emerald-400">
+                                {lesson.title}
+                              </span>
+                            </div>
+
+                            <div className="ml-4 flex shrink-0 items-center gap-2.5">
+                              {lesson.freePreview && (
+                                <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+                                  Free Preview
+                                </span>
+                              )}
+                              <span className="text-xs text-neutral-400">
+                                {lesson.durationFormatted}
+                              </span>
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 )
               })}
@@ -408,28 +356,68 @@ export function CourseDetailPage() {
             )}
           </div>
         </section>
+
+        {/* Section: Instructor */}
+        {course.instructor && (
+          <section className="mt-16 sm:mt-20">
+            <div className="rounded-2xl border border-neutral-200/80 bg-white p-6 sm:p-8 shadow-xs dark:border-neutral-800 dark:bg-neutral-900">
+              <h2 className="font-sans text-2xl font-bold tracking-tight text-neutral-900 sm:text-3xl dark:text-white">
+                Instructor
+              </h2>
+              <div className="mt-6 flex flex-col sm:flex-row items-start gap-6">
+                <img
+                  src={course.instructor.avatar}
+                  alt={course.instructor.name}
+                  className="size-20 rounded-2xl object-cover border border-neutral-200 dark:border-neutral-700"
+                />
+                <div className="flex-1">
+                  <h3 className="text-xl font-bold text-neutral-900 dark:text-white">
+                    {course.instructor.name}
+                  </h3>
+                  {course.instructor.expertise && course.instructor.expertise.length > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {course.instructor.expertise.map((skill, sIdx) => (
+                        <span
+                          key={sIdx}
+                          className="rounded-full bg-neutral-100 px-3 py-1 text-xs font-medium text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                  {course.instructor.bio && (
+                    <p className="mt-3 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
+                      {course.instructor.bio}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
       </div>
 
       {/* Floating / Sticky Progress Bar */}
-      <div className="sticky bottom-6 z-30 mt-16 px-4 sm:px-6">
-        <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 rounded-2xl border border-neutral-200/80 bg-white/95 p-4 shadow-xl backdrop-blur-md sm:gap-6 sm:px-6 dark:border-neutral-800 dark:bg-neutral-900/95">
+      <div className="sticky bottom-4 sm:bottom-6 z-30 mt-12 sm:mt-16 px-3 sm:px-6">
+        <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 sm:gap-6 rounded-2xl border border-neutral-200/80 bg-white/95 p-3 sm:p-4 shadow-xl backdrop-blur-md dark:border-neutral-800 dark:bg-neutral-900/95">
           {/* Left: Icon & Progress Text */}
-          <div className="flex items-center gap-3.5 shrink-0">
-            <div className="flex size-10 items-center justify-center rounded-full bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400">
-              <ChartNoAxesColumnIncreasing className="size-5" />
+          <div className="flex items-center gap-2.5 sm:gap-3.5 shrink-0">
+            <div className="flex size-9 sm:size-10 items-center justify-center rounded-full bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400">
+              <ChartNoAxesColumnIncreasing className="size-4 sm:size-5" />
             </div>
             <div>
-              <span className="block text-xs font-medium text-neutral-500 dark:text-neutral-400">
+              <span className="block text-[11px] sm:text-xs font-medium text-neutral-500 dark:text-neutral-400">
                 Your Progress
               </span>
-              <span className="block font-sans text-sm sm:text-base font-bold text-neutral-900 dark:text-white">
+              <span className="block font-sans text-xs sm:text-base font-bold text-neutral-900 dark:text-white">
                 35% complete
               </span>
             </div>
           </div>
 
           {/* Center: Progress Bar */}
-          <div className="hidden sm:block flex-1 max-w-md">
+          <div className="hidden md:block flex-1 max-w-md">
             <div className="h-2.5 w-full overflow-hidden rounded-full bg-neutral-100 dark:bg-neutral-800">
               <div className="h-full rounded-full bg-emerald-500 transition-all duration-500 w-[35%]" />
             </div>
@@ -438,10 +426,10 @@ export function CourseDetailPage() {
           {/* Right: Continue Learning Button */}
           <Link
             to={`/courses/${course.id}/learn`}
-            className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-emerald-500 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-600 active:bg-emerald-700"
+            className="inline-flex shrink-0 items-center gap-1.5 sm:gap-2 rounded-xl bg-emerald-500 px-4 sm:px-6 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-600 active:bg-emerald-700"
           >
             Continue Learning
-            <ArrowRight className="size-4" />
+            <ArrowRight className="size-3.5 sm:size-4" />
           </Link>
         </div>
       </div>
